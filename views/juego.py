@@ -24,13 +24,13 @@ class Juego():
         self.lienzo = tk.Canvas(self.ventana, bg="#94caca")
         self.lienzo.place(relx=0.5, rely=0.5, anchor="center", width=800, height=600)
 
-        imagenTronco = Image.open(r"icons\woods.png")
+        imagenTronco = Image.open(r"Juego\icons\woods.png")
         imagentk = ImageTk.PhotoImage(imagenTronco)
         image = self.lienzo.create_image(300, 445, image=imagentk) 
 
-        self.iconoJugar = tk.PhotoImage(file=r"icons\icons8-play-40.png")
-        self.iconoAyuda = tk.PhotoImage(file=r"icons\icons8-help-50.png")
-        self.iconoNube = tk.PhotoImage(file=r"icons\icons8-clouds-100.png")
+        self.iconoJugar = tk.PhotoImage(file=r"Juego\icons\icons8-play-40.png")
+        self.iconoAyuda = tk.PhotoImage(file=r"Juego\icons\icons8-help-50.png")
+        self.iconoNube = tk.PhotoImage(file=r"Juego\icons\icons8-clouds-100.png")
         
         self.btnJugar = tk.Button(self.ventana, image=self.iconoJugar)
         self.btnJugar.place(relx=0.5, rely=1, y=-27, anchor="center", width=40, height=40)
