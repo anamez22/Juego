@@ -4,28 +4,37 @@ from views.Tooltip import Tooltip
 from PIL import Image, ImageTk
 
 from Controllers.Tuberias import Tuberias
+from Controllers.pajaro import Manejo_Pajaro
 
 class Juego():
 
     def comenzarJuego(self,event):
         self.tuberia = Tuberias(self.lienzo)
         self.tuberia.iniciar_movimiento()
-        #aca puede crear el objeto de la clase pajaro q va a crear para que ejecute las funciones suyas
-        #porque pues esta funcion es la que se ejecuta al presionar el boton jugar
+        self.pajaro = Manejo_Pajaro(self.lienzo)
+        self.actualizarJuego()
+    
+    def moverPajaro(self,event):
+        if hasattr(self, 'pajaro'): #Verifica si el pajaro ha sido creado
+            self.pajaro.saltar(event)
+    
+    def actualizarJuego(self):
+         if hasattr(self, 'pajaro'):
+             self.pajaro.actualizar_posicion()
+             self.lienzo.after(30, self.actualizarJuego) #llama la funcion cada 30 milisegundos
+    
 
-        #aqui vamos a ejcutar las funciones de las clases que se creen en otros archivos 
         
 
 
     def paint(self):
-        cuerpo = self.lienzo.create_oval(10, 270, 75, 330, fill="#fcf83b", tags="cuerpo")
-        ala = self.lienzo.create_oval(7, 295, 37, 315, fill="#ffffff", tags="ala")
-        ojo = self.lienzo.create_oval(55, 275, 80, 300, fill="#ffffff", tags="ojo")
-        pupila = self.lienzo.create_oval(67, 285, 77, 295, fill="#000102", tags="pupila")
-        boca = self.lienzo.create_oval(65, 302, 85, 310, fill="#F38C47")
+       
+        self.lienzo.create_oval(200, 270, 265, 330, fill="#fcf83b", tags="cuerpo")           
+        self.lienzo.create_oval(245, 275, 270, 300, fill="#ffffff", tags="ojo")              
+        self.lienzo.create_oval(257, 285, 267, 295, fill="#000102", tags="pupila")           
+        self.lienzo.create_oval(255, 302, 275, 310, fill="#F38C47", tags="boca")             
 
-        alaArriba = self.lienzo.create_oval(7, 285, 37, 305, fill="#ffffff", tags="ala_arriba")
-        alaabajo = self.lienzo.create_oval(7, 305, 37, 325, fill="#ffffff", tags="ala_abajo")
+        self.lienzo.create_oval(194, 290, 228, 313, fill="#ffffff", tags="ala")       
 
         
     def __init__(self):
@@ -36,6 +45,7 @@ class Juego():
 
         self.lienzo = tk.Canvas(self.ventana, bg="#94caca")
         self.lienzo.place(relx=0.5, rely=0.5, anchor="center", width=800, height=640)
+        self.lienzo.focus_set() # Esto permite que el lienzo reciba eventos de teclado
 
         self.iconoJugar = tk.PhotoImage(file=r"Juego\icons\icono_play.png")
         self.iconoAyuda = tk.PhotoImage(file=r"Juego\icons\icons8-help-50.png")
@@ -55,6 +65,8 @@ class Juego():
         
         self.paint()
         self.btnJugar.bind("<Button-1>", self.comenzarJuego)
+        self.lienzo.bind("<space>", self.moverPajaro)
+        
 
 
         self.ventana.mainloop()
