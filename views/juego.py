@@ -47,8 +47,12 @@ class Juego():
         self.lienzo.place(relx=0.5, rely=0.5, anchor="center", width=800, height=640)
         self.lienzo.focus_set() # Esto permite que el lienzo reciba eventos de teclado
 
+        self.imagenFondo = tk.PhotoImage(file=r"Juego\icons\fondo juego.png")
+        self.lienzo.create_image(0, 0, image=self.imagenFondo, anchor="nw", tags="fondo")
+
         self.iconoJugar = tk.PhotoImage(file=r"Juego\icons\icono_play.png")
         self.iconoAyuda = tk.PhotoImage(file=r"Juego\icons\icons8-help-50.png")
+        
         
         self.btnJugar = tk.Button(self.ventana, image=self.iconoJugar, bg="#dde38d")
         self.btnJugar.place(relx=0.5, rely=1, y=-53, anchor="center", width=105, height=44)
