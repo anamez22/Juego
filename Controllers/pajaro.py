@@ -12,14 +12,7 @@ class Manejo_Pajaro:
     def actualizar_posicion(self):
         self.velocidad +=self.gravedad
         self.mover_pajaro(self.velocidad)
-        coords = self.lienzo.coords(self.pajaro)  # [x1, y1, x2, y2]
-        _, _, _, y2 = coords #hace que y2 sea la coordenada y del borde inferior del pajaro
-
-    # Evita que baje más allá del suelo 
-        if y2 + self.velocidad < 590:
-            self.mover_pajaro(self.velocidad)
-        else:
-            self.velocidad = 0  
+       
 
 
     def saltar(self, event=None):
