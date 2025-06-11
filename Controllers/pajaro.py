@@ -21,8 +21,6 @@ class Manejo_Pajaro:
     def mover_pajaro(self, velocidad):
         self.lienzo.move(self.pajaro, 0, velocidad)
         self.lienzo.move(self.lienzo.find_withtag("ala")[0], 0, velocidad)
-        self.lienzo.move(self.lienzo.find_withtag("ala_arriba")[0], 0, velocidad)
-        self.lienzo.move(self.lienzo.find_withtag("ala_abajo")[0], 0, velocidad)
         self.lienzo.move(self.lienzo.find_withtag("ojo")[0], 0, velocidad)
         self.lienzo.move(self.lienzo.find_withtag("pupila")[0], 0, velocidad)
         self.lienzo.move(self.lienzo.find_withtag("boca")[0], 0, velocidad)

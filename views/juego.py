@@ -30,13 +30,11 @@ class Juego():
     def paint(self):
        
         self.lienzo.create_oval(200, 270, 265, 330, fill="#fcf83b", tags="cuerpo")           
-        self.lienzo.create_oval(197, 295, 227, 315, fill="#ffffff", tags="ala")              
         self.lienzo.create_oval(245, 275, 270, 300, fill="#ffffff", tags="ojo")              
         self.lienzo.create_oval(257, 285, 267, 295, fill="#000102", tags="pupila")           
         self.lienzo.create_oval(255, 302, 275, 310, fill="#F38C47", tags="boca")             
 
-        self.lienzo.create_oval(197, 285, 227, 305, fill="#ffffff", tags="ala_arriba")       
-        self.lienzo.create_oval(197, 305, 227, 325, fill="#ffffff", tags="ala_abajo")  
+        self.lienzo.create_oval(194, 290, 228, 313, fill="#ffffff", tags="ala")       
 
         
     def __init__(self):

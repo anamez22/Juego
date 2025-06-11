@@ -12,10 +12,10 @@ class Tuberias:
 
     def dibujar(self):
         self.tuberia1=self.lienzo.create_rectangle(680+self.x, 0, 790+self.x, self.obstaculo, fill=self.color, tags="tuberia" )
-        self.tuberia2=self.lienzo.create_rectangle(680+self.x, self.obstaculo+190, 790+self.x, 590, fill=self.color, tags="tuberia" )
+        self.tuberia2=self.lienzo.create_rectangle(680+self.x, self.obstaculo+175, 790+self.x, 590, fill=self.color, tags="tuberia" )
 
         self.decoracion1=self.lienzo.create_rectangle(670+self.x, self.obstaculo-50, 800+self.x, self.obstaculo, fill=self.color, tags="tuberia")
-        self.decoracion2=self.lienzo.create_rectangle(670+self.x, self.obstaculo+190, 800+self.x, self.obstaculo+242, fill=self.color, tags="tuberia")
+        self.decoracion2=self.lienzo.create_rectangle(670+self.x, self.obstaculo+175, 800+self.x, self.obstaculo+225, fill=self.color, tags="tuberia")
   
    
     def mover_tuberias(self):
@@ -31,7 +31,7 @@ class Tuberias:
                 tuberia.mover_tuberias()
                 if tuberia.x < -800:
                     Tuberias.tuberias_funcionando.remove(tuberia)
-            if (not Tuberias.tuberias_funcionando) or (Tuberias.tuberias_funcionando[-1].x <= -350):
+            if (not Tuberias.tuberias_funcionando) or (Tuberias.tuberias_funcionando[-1].x <= -300):
                 Tuberias(tuberia.lienzo)
             time.sleep(0.016)
                 
