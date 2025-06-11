@@ -47,11 +47,12 @@ class Juego():
         self.lienzo.place(relx=0.5, rely=0.5, anchor="center", width=800, height=640)
         self.lienzo.focus_set() # Esto permite que el lienzo reciba eventos de teclado
 
-        self.imagenFondo = tk.PhotoImage(file=r"Juego\icons\fondo juego.png")
+        self.imagenFondo = tk.PhotoImage(file=r"icons\fondo juego.png")
         self.lienzo.create_image(0, 0, image=self.imagenFondo, anchor="nw", tags="fondo")
 
-        self.iconoJugar = tk.PhotoImage(file=r"Juego\icons\icono_play.png")
-        self.iconoAyuda = tk.PhotoImage(file=r"Juego\icons\icons8-help-50.png")
+        self.iconoJugar = tk.PhotoImage(file=r"icons\icono_play.png")
+        self.iconoAyuda = tk.PhotoImage(file=r"icons\icons8-help-50.png")
+        self.verPuntajes = tk.PhotoImage(file=r"icons\icons8-mac-folder-50.png")
         
         
         self.btnJugar = tk.Button(self.ventana, image=self.iconoJugar, bg="#dde38d")
@@ -61,9 +62,10 @@ class Juego():
         self.btnAyuda = tk.Button(self.ventana, image=self.iconoAyuda)
         self.btnAyuda.place(width=50, height=50, x=780, y=50)
         Tooltip(self.btnAyuda, "Presione para ver la ayuda")
- 
-        self.lblPuntaje = tk.Label(self.lienzo, text="Puntaje", font= ("Arial", 14))
-        self.lblPuntaje.place(relx=0.5, y=30, anchor="center")
+
+        self.btnPuntajes = tk.Button(self.ventana, image=self.verPuntajes)
+        self.btnPuntajes.place(width=50 ,height=50, x=70, y=50)
+        Tooltip(self.btnPuntajes, "Presione para ver los \n puntajes de los jugadores")
 
         self.lienzo.create_rectangle(0, 590, 800, 640, fill="#dde38d", outline="#33b812", width=5)
         
