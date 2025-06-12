@@ -14,12 +14,12 @@ class Registro():
         self.lienzo = tk.Canvas(self.ventana, bg = "#aaff98")
         self.lienzo.place(relx=0.5, rely=0.5, anchor="center", width=550, height=500)
 
-        self.iconoUsuario = tk.PhotoImage(file=r"icons\icons8-user-30.png")
-        self.iconoVentana = tk.PhotoImage(file=r"icons\icons8-sign-in-80.png")
-        self.iconoVer = tk.PhotoImage(file=r"icons\icons8-preview-pane-30.png")
-        self.iconoAyuda = tk.PhotoImage(file=r"icons\icons8-help-eye-50.png")
-        self.iconoGuardar = tk.PhotoImage(file=r"icons\icons8-save-40.png")
-        self.iconoEliminar = tk.PhotoImage(file=r"icons\icons8-trash-40.png")
+        self.iconoUsuario = tk.PhotoImage(file=r"Juego\icons\icons8-user-30.png")
+        self.iconoVentana = tk.PhotoImage(file=r"Juego\icons\icons8-sign-in-80.png")
+        self.iconoVer = tk.PhotoImage(file=r"Juego\icons\icons8-preview-pane-30.png")
+        self.iconoAyuda = tk.PhotoImage(file=r"Juego\icons\icons8-help-eye-50.png")
+        self.iconoGuardar = tk.PhotoImage(file=r"Juego\icons\icons8-save-40.png")
+        self.iconoEliminar = tk.PhotoImage(file=r"Juego\icons\icons8-trash-40.png")
                
         self.lblTitulo = tk.Label(self.ventana, text="Registrarse", font= ("Arial", 15), bg="#def1f7")
         self.lblTitulo.place(width=200, height=40, relx=0.5, y=50, anchor="n")
