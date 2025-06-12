@@ -1,8 +1,6 @@
 import tkinter as tk 
 from tkinter import *
-import time
 from views.Tooltip import Tooltip
-from views.juego import Juego
 
 class Logging():
 
@@ -50,37 +48,45 @@ class Logging():
             self.tool_contraseña=Tooltip(self.txtPassword, "Ingrese su contraseña. \nminimo 8 carácteres.\nletras y/o números.")
             if event.keysym=="Return":
                 self.txtPassword.focus()
+
         elif self.estado_usuario=="invalido":
+            self.tool_contraseña.hide_tooltip()
+            self.tool_contraseña= Tooltip(self.txtPassword, "Para poder crear una contraseña primero \ncree un nombre de usuario VALIDO",background="#fa8a76")
             self.txtPassword.config(state="disabled")
             
-            
+         
 
     def validar_contraseña(self,event):
+        import re
         self.tool_usuario.hide_tooltip()
-
-        if event.keysym == "space" or event.keysym == '.':
-            self.tool_contraseña.hide_tooltip()
-            self.tool_contraseña= Tooltip(self.txtPassword, "En la contraseña NO se aceptan espacios ni puntos",background="#fa8a76")
-            self.tool_contraseña.show_tooltip()
-            self.estado_contraseña="invalido"
-        else:
-            if len(self.txtPassword.get()) >= 6 and len(self.txtPassword.get())<=10:
+        contraseña = self.txtPassword.get()
+        patron= r"^[a-zA-Z0-9*_-]+$"  # Permite letras, números, *, _ y -
+        
+        
+        if re.match(patron, contraseña):
+            if len(contraseña) >= 6 and len(contraseña)<=10:
                 self.tool_contraseña.hide_tooltip()
                 self.tool_contraseña= Tooltip(self.txtPassword, "¡Excelente!\nTu Contraseña es valida.",background="#76fa99")
                 self.tool_contraseña.show_tooltip()
                 self.estado_contraseña="valido"
 
-            elif len(self.txtPassword.get()) < 6:
+            elif len(contraseña) < 6:
                 self.tool_contraseña.hide_tooltip()
-                self.tool_contraseña= Tooltip(self.txtPassword, "El usuario debe tener al menos 6 caracteres.", background="#fa8a76")
+                self.tool_contraseña= Tooltip(self.txtPassword, "La contraseña debe tener al menos 6 caracteres.", background="#fa8a76")
                 self.tool_contraseña.show_tooltip()
                 self.estado_contraseña="invalido"
             
-            elif len(self.txtPassword.get()) > 10:
+            elif len(contraseña) > 10:
                 self.tool_contraseña.hide_tooltip()
                 self.tool_contraseña= Tooltip(self.txtPassword, "La contraseña no debe tener \nmás de 10 caracteres.", background="#fa8a76")
                 self.tool_contraseña.show_tooltip()
                 self.estado_contraseña="invalido"
+
+        else:
+            self.tool_contraseña.hide_tooltip()
+            self.tool_contraseña= Tooltip(self.txtPassword, "En la contraseña SOLO se permiten letras, números, * y _\nNO se aceptan otros caracteres ni espacios",background="#fa8a76")
+            self.tool_contraseña.show_tooltip()
+            self.estado_contraseña="invalido"            
 
 
     def verCaracteres(self, event):
@@ -148,7 +154,7 @@ class Logging():
         self.tool_contraseña=Tooltip(self.txtPassword, "Para poder crear una contraseña primero \ncree un nombre de usuario VALIDO")
         self.txtPassword.bind("<KeyRelease>", self.validar_contraseña)
    
-        self.btnVer = tk.Button(self.ventana, image =self.iconoVer)
+        self.btnVer = tk.Button(self.ventana, image =self.iconoVer, bg="#ff5810")
         self.btnVer.place(width=30, height=30, x=370, y=240)  
         Tooltip(self.btnVer, "Presione para ver la contraseña")
         self.btnVer.bind("<Button-1>", self.verCaracteres)                    
