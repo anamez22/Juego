@@ -71,8 +71,7 @@ class Juego():
                         self.game_over()
                         return
                 time.sleep(0.01)
-
-    def colision(self,r1, r2):  # rectangulos
+    def colision(self,r1, r2):  # r=rectangulos
         r1_izq, r1_arriba, r1_dere, r1_abajo = r1
         r2_izq, r2_arriba, r2_der, r2_abajo = r2
         no_colision = (
@@ -152,6 +151,6 @@ class Juego():
         self.ventana.bind("<KeyRelease>", self.comenzarJuego)
         self.lienzo.bind("<space>", self.moverPajaro)
         self.hilo_colisiones()
-       
+        self.pajaro="pajaro"
 
         self.ventana.mainloop()
