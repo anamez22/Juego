@@ -109,6 +109,7 @@ class Juego():
 
         self.iconoJugar = tk.PhotoImage(file=r"Juego\icons\icono_play.png")
         self.iconoAyuda = tk.PhotoImage(file=r"Juego\icons\icons8-help-50.png")
+        self.verPuntajes = tk.PhotoImage(file=r"Juego\icons\icons8-mac-folder-50.png")
         
         
         self.btnJugar = tk.Button(self.ventana, image=self.iconoJugar, bg="#dde38d")
@@ -121,6 +122,10 @@ class Juego():
  
         self.lblPuntaje = tk.Label(self.lienzo, text="Puntaje: 0",  font=("Comic Sans MS", 18, "bold"),bg="#94caca", fg="#175e0d",relief="raised", bd=4)
         self.lblPuntaje.place(relx=0.5, y=30, anchor="center")
+
+        self.btnPuntajes = tk.Button(self.ventana, image=self.verPuntajes)
+        self.btnPuntajes.place(width=50 ,height=50, x=70, y=50)
+        Tooltip(self.btnPuntajes, "Presione para ver los \n puntajes de los jugadores")
 
         self.lienzo.create_rectangle(0, 590, 800, 640, fill="#dde38d", outline="#33b812", width=5)
         

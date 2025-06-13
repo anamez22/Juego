@@ -24,11 +24,12 @@ class Logging():
         self.lienzo.create_oval(220, 320, 240, 340, fill="#3bbb09", outline="#069e1f")
         self.lienzo.create_oval(280, 70, 300, 90, fill="#3bbb09", outline="#069e1f")
 
-        self.iconoAyuda = tk.PhotoImage(file=r"Juego\icons\icons8-help.png")
-        self.iconoEntrar = tk.PhotoImage(file=r"Juego\icons\icons8-enter-40.png")
-        self.iconoVer = tk.PhotoImage(file=r"Juego\icons\icons8-vision-30.png")
-        self.iconoVen = tk.PhotoImage(file=r"Juego\icons\icons8-bmo-80.png")
-        self.iconoEliminar = tk.PhotoImage(file=r"Juego\icons\icons8-trash-40.png")
+        self.iconoAyuda = tk.PhotoImage(file=r"icons\icons8-help.png")
+        self.iconoEntrar = tk.PhotoImage(file=r"icons\icons8-enter-40.png")
+        self.iconoVer = tk.PhotoImage(file=r"icons\icons8-vision-30.png")
+        self.iconoVen = tk.PhotoImage(file=r"icons\icons8-bmo-80.png")
+        self.iconoEliminar = tk.PhotoImage(file=r"icons\icons8-trash-40.png")
+        self.iconoRegis = tk.PhotoImage(file=r"icons\icons8-add-user-35.png")
 
         self.lblTitulo = tk.Label(self.ventana, text="Inicio de Sesión", font= ("Arial", 15), bg="#fdebd0")
         self.lblTitulo.place(width=200, height=40, relx=0.5, y=40, anchor="n")
@@ -62,12 +63,15 @@ class Logging():
         self.btnIngresar.place(width=120, height=40, relx=0.5, y=310)
         Tooltip(self.btnIngresar, "Presione para ingresar el usuario")
 
+        self.btnRegistrarse = tk.Button(self.ventana, text="Registrarse", image=self.iconoRegis, compound=RIGHT)
+        self.btnRegistrarse.place(width=120, height=40, relx=0.2, y=310)
+        Tooltip(self.btnRegistrarse, "Registrate si no tienes una cuenta")
+
         self.btnEliminar = tk.Button(self.ventana, image=self.iconoEliminar)
-        self.btnEliminar.place(width=40, height=40, relx=0.3, y=310)
+        self.btnEliminar.place(width=40, height=40, x=40, y=370)
         Tooltip(self.btnEliminar, "Presione para eliminar los datos ingresados")
 
-        
 
         self.ventana.mainloop()
 
-   
+
