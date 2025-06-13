@@ -1,7 +1,7 @@
-from views.juego import Juego
+from views.Logging import Logging
 
 class Main():
     def main():
-        app = Juego()
+        app = Logging()
     main()
 

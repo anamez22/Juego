@@ -7,6 +7,7 @@ class Tooltip:
         self.widget = widget
         self.text = text
         self.tooltip = None
+        self.label = None
         self.widget.bind("<Enter>", self.show_tooltip)
         self.widget.bind("<Leave>", self.hide_tooltip)
 
@@ -18,9 +19,21 @@ class Tooltip:
         self.tooltip = tk.Toplevel(self.widget)
         self.tooltip.wm_overrideredirect(True)
         self.tooltip.wm_geometry(f"+{x}+{y}")
-        label = tk.Label(self.tooltip, text=self.text, background=self.background, foreground=self.foreground)
-        label.pack()
+        self.label = tk.Label(self.tooltip, text=self.text, background=self.background, foreground=self.foreground)
+        self.label.pack()
 
     def hide_tooltip(self, *args):
         if self.tooltip:
             self.tooltip.destroy()
+            self.tooltip = None
+            self.label = None
+
+    def update_tooltip(self, text, background=None, foreground=None):
+        if text:
+            self.text = text
+        if background:
+            self.background = background
+        if foreground:
+            self.foreground = foreground
+        if self.label:
+            self.label.config(text=self.text, background=self.background, foreground=self.foreground)
