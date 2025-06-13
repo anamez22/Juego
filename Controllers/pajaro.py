@@ -10,9 +10,17 @@ class Manejo_Pajaro:
         self.pajaro = self.lienzo.find_withtag("cuerpo")[0]
 
     def actualizar_posicion(self):
+        if not getattr(self,"movimiento_activo",True):
+            return
+        
         self.velocidad +=self.gravedad
         self.mover_pajaro(self.velocidad)
-       
+
+    def detener(self):
+        self.movimiento_activo=False
+
+
+ 
 
 
     def saltar(self, event=None):
