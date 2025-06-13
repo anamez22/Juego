@@ -4,6 +4,7 @@ from views.Tooltip import Tooltip
 from PIL import Image, ImageTk
 import threading as th
 import time
+from tkinter import messagebox as mb
 
 
 from Controllers.Tuberias import Tuberias
@@ -13,13 +14,35 @@ class Juego():
 
     instacia_juego=None
 
-    def comenzarJuego(self,event):
-        self.tuberia=Tuberias(self.lienzo,self) #self llama al self.juego de las tuberias
-        self.tuberia.iniciar_movimiento()
-        self.pajaro = Manejo_Pajaro(self.lienzo)
-        self.actualizarJuego()
-        self.lienzo.focus_set() 
+    def limpiar_juego(self,event):
+        tuberias_hechas=self.tuberia.tuberias_funcionando
 
+        for tuberia in tuberias_hechas:
+            self.lienzo.delete("tuberia")
+        
+        if hasattr(self, 'pajaro'): #Verifica si el pajaro ha sido creado
+            self.lienzo.delete("pajaro")
+        self.paint()
+      
+
+    def reiniciar_juego(self):
+        pass
+
+    def comenzarJuego(self,event):
+        if event.keysym =="c":
+
+            if self.juego_activo:#no deja que se cree otro hilo hasta que el anterior termine su ciclo
+                    return
+                        
+            self.juego_activo=True
+            #self.btnJugar.config(state="disabled")
+            self.tuberia=Tuberias(self.lienzo,self) #self llama al self.juego de las tuberias
+            self.tuberia.iniciar_movimiento()#crear el hilo que mueve el objeto 
+        
+            self.pajaro = Manejo_Pajaro(self.lienzo)       
+            self.actualizarJuego()
+            self.lienzo.focus_set() 
+            
         
     def moverPajaro(self,event):
         if hasattr(self, 'pajaro'): #Verifica si el pajaro ha sido creado
@@ -29,9 +52,7 @@ class Juego():
      if self.juego_activo and hasattr(self, 'pajaro'):
         self.pajaro.actualizar_posicion()
         self.lienzo.after(30, self.actualizarJuego)
-
        
-    
 
     def  hilo_colisiones(self):
         hilo_colision=th.Thread(target=self.detectar_colisiones)
@@ -41,7 +62,7 @@ class Juego():
     def detectar_colisiones(self):
         while True:
             if hasattr(self,"pajaro"): #ya existe pajaro?
-                pajaro_coordenadas = self.lienzo.bbox(self.pajaro.pajaro) #bbox: cuadro delemitador que devuelve una tupla de 4 numeros que son las coordenadas de los rectangulos
+                pajaro_coordenadas = self.lienzo.bbox("pajaro") #bbox: cuadro delemitador que devuelve una tupla de 4 numeros que son las coordenadas de los rectangulos
                 for tuberia in Tuberias.tuberias_funcionando:
                     t1=self.lienzo.bbox(tuberia.tuberia1)
                     t2=self.lienzo.bbox(tuberia.tuberia2)
@@ -50,6 +71,7 @@ class Juego():
                         self.game_over()
                         return
                 time.sleep(0.01)
+
     def colision(self,r1, r2):  # rectangulos
         r1_izq, r1_arriba, r1_dere, r1_abajo = r1
         r2_izq, r2_arriba, r2_der, r2_abajo = r2
@@ -62,11 +84,9 @@ class Juego():
         return not no_colision
     
     
-
-    
     def game_over(self):
         self.juego_activo = False  # Detiene el bucle del juego
-        Tuberias.juego_activo=False
+        self.btnJugar.config(state="normal")
         self.lienzo.create_text(400, 320, text="GAME OVER", fill="black", font=("Arial", 40))
 
         if hasattr(self, "pajaro"):
@@ -80,17 +100,18 @@ class Juego():
 
     def paint(self):
        
-        self.lienzo.create_oval(200, 270, 265, 330, fill="#fcf83b", tags="cuerpo")           
-        self.lienzo.create_oval(245, 275, 270, 300, fill="#ffffff", tags="ojo")              
-        self.lienzo.create_oval(257, 285, 267, 295, fill="#000102", tags="pupila")           
-        self.lienzo.create_oval(255, 302, 275, 310, fill="#F38C47", tags="boca")             
+        self.lienzo.create_oval(200, 270, 265, 330, fill=self.color_pajaro, tags="pajaro")           
+        self.lienzo.create_oval(245, 275, 270, 300, fill="#ffffff", tags="pajaro")              
+        self.lienzo.create_oval(257, 285, 267, 295, fill="#000102", tags="pajaro")           
+        self.lienzo.create_oval(255, 302, 275, 310, fill="#F38C47", tags="pajaro")             
 
-        self.lienzo.create_oval(194, 290, 228, 313, fill="#ffffff", tags="ala")       
+        self.lienzo.create_oval(194, 290, 228, 313, fill="#ffffff", tags="pajaro")       
 
         
     def __init__(self):
         self.puntaje=0
-        self.juego_activo=True
+        self.juego_activo=False
+        self.color_pajaro="#fcf83b"
         self.ventana = tk.Tk()
         self.ventana.title("JUEGO HAPPY BIRD")
         self.ventana.config(width=900, height=700, bg="#000000")
@@ -108,7 +129,7 @@ class Juego():
         self.verPuntajes = tk.PhotoImage(file=r"Juego\icons\icons8-mac-folder-50.png")
         
         
-        self.btnJugar = tk.Button(self.ventana, image=self.iconoJugar, bg="#dde38d")
+        self.btnJugar = tk.Button(self.ventana, image=self.iconoJugar, bg="#dde38d",state="disabled")
         self.btnJugar.place(relx=0.5, rely=1, y=-53, anchor="center", width=105, height=44)
         Tooltip(self.btnJugar, "Presione para iniciar el juego")
 
@@ -126,7 +147,9 @@ class Juego():
         self.lienzo.create_rectangle(0, 590, 800, 640, fill="#dde38d", outline="#33b812", width=5)
         
         self.paint()
-        self.btnJugar.bind("<Button-1>", self.comenzarJuego)
+        
+        self.btnJugar.bind("<Button-1>", self.limpiar_juego)
+        self.ventana.bind("<KeyRelease>", self.comenzarJuego)
         self.lienzo.bind("<space>", self.moverPajaro)
         self.hilo_colisiones()
        

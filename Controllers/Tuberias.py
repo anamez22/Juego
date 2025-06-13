@@ -5,9 +5,6 @@ import time
 class Tuberias:
     tuberias_funcionando=[]
 
-   
-   
-
     def iniciar_movimiento(self, *args):
         hilo1 = th.Thread(target=self.actualizar_tuberias)
         hilo1.start()   
@@ -39,7 +36,7 @@ class Tuberias:
       
 
     def actualizar_tuberias(self):
-        while True:
+        while self.juego.juego_activo:#cuando self.juego_activo sea False el hilo creado termina su ciclo
             for tuberia in Tuberias.tuberias_funcionando:
                 tuberia.mover_tuberias()
                 if tuberia.x < -800:
@@ -47,10 +44,8 @@ class Tuberias:
             if (not Tuberias.tuberias_funcionando) or (Tuberias.tuberias_funcionando[-1].x <= -300):
                 Tuberias(tuberia.lienzo, tuberia.juego)
             time.sleep(0.016)
-
-
-
-   
+    
+       
                 
     def __init__(self, lienzo,juego):
         self.juego=juego
@@ -63,7 +58,7 @@ class Tuberias:
         self.color = "#33b812"
 
         self.dibujar()
-        Tuberias.tuberias_funcionando.append(self)
+        Tuberias.tuberias_funcionando.append(self)#guarda la referencia del objeto que se crea
        
 
 

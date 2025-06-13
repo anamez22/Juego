@@ -170,6 +170,7 @@ class Logging():
         self.btnAyuda = tk.Button(self.ventana, image=self.iconoAyuda)
         self.btnAyuda.place(width=50, height=50, x=400, y=40)
         Tooltip(self.btnAyuda, "Presione para ver la ayuda")
+        self.btnAyuda.bind("<Button-1>", self.mostrar_ayuda)
                                       
         self.lblUsuario = tk.Label(self.ventana, text="Usuario*:", font=("Arial", 12), bg="#fdebd0")
         self.lblUsuario.place(width=120, height=30, x=70, y=200)
