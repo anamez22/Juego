@@ -41,7 +41,7 @@ class Juego():
     def detectar_colisiones(self):
         while True:
             if hasattr(self,"pajaro"): #ya existe pajaro?
-                pajaro_coordenadas = self.lienzo.bbox(self.pajaro.pajaro) #bbox: cuadro delemitador que devuelve una tupla de 4 numeros que son las coordenadas de los rectangulos
+                pajaro_coordenadas = self.lienzo.bbox("pajaro") #bbox: cuadro delemitador que devuelve una tupla de 4 numeros que son las coordenadas de los rectangulos
                 for tuberia in Tuberias.tuberias_funcionando:
                     t1=self.lienzo.bbox(tuberia.tuberia1)
                     t2=self.lienzo.bbox(tuberia.tuberia2)
@@ -50,7 +50,7 @@ class Juego():
                         self.game_over()
                         return
                 time.sleep(0.01)
-    def colision(self,r1, r2):  # rectangulos
+    def colision(self,r1, r2):  # r=rectangulos
         r1_izq, r1_arriba, r1_dere, r1_abajo = r1
         r2_izq, r2_arriba, r2_der, r2_abajo = r2
         no_colision = (
@@ -84,12 +84,11 @@ class Juego():
 
     def paint(self):
        
-        self.lienzo.create_oval(200, 270, 265, 330, fill="#fcf83b", tags="cuerpo")           
-        self.lienzo.create_oval(245, 275, 270, 300, fill="#ffffff", tags="ojo")              
-        self.lienzo.create_oval(257, 285, 267, 295, fill="#000102", tags="pupila")           
-        self.lienzo.create_oval(255, 302, 275, 310, fill="#F38C47", tags="boca")             
-
-        self.lienzo.create_oval(194, 290, 228, 313, fill="#ffffff", tags="ala")       
+        self.lienzo.create_oval(200, 270, 265, 330, fill="#fcf83b", tags=("pajaro", "cuerpo"))      
+        self.lienzo.create_oval(245, 275, 270, 300, fill="#ffffff", tags=("pajaro", "ojo"))            
+        self.lienzo.create_oval(257, 285, 267, 295, fill="#000102", tags=("pajaro", "pupila"))           
+        self.lienzo.create_oval(255, 302, 275, 310, fill="#F38C47", tags=("pajaro","boca"))           
+        self.lienzo.create_oval(194, 290, 228, 313, fill="#ffffff", tags=("pajaro","ala"))   
 
         
     def __init__(self):
@@ -133,6 +132,6 @@ class Juego():
         self.btnJugar.bind("<Button-1>", self.comenzarJuego)
         self.lienzo.bind("<space>", self.moverPajaro)
         self.hilo_colisiones()
-       
+        self.pajaro="pajaro"
 
         self.ventana.mainloop()
