@@ -78,10 +78,6 @@ class Juego():
 
 
 
-
-
-
-
     def paint(self):
        
         self.lienzo.create_oval(200, 270, 265, 330, fill="#fcf83b", tags=("pajaro", "cuerpo"))      
