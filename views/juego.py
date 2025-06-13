@@ -2,29 +2,84 @@ import tkinter as tk
 from tkinter import * 
 from views.Tooltip import Tooltip
 from PIL import Image, ImageTk
+import threading as th
+import time
+
 
 from Controllers.Tuberias import Tuberias
 from Controllers.pajaro import Manejo_Pajaro
 
 class Juego():
 
+    instacia_juego=None
+
     def comenzarJuego(self,event):
-        self.tuberia = Tuberias(self.lienzo)
+        self.tuberia=Tuberias(self.lienzo,self) #self llama al self.juego de las tuberias
         self.tuberia.iniciar_movimiento()
         self.pajaro = Manejo_Pajaro(self.lienzo)
         self.actualizarJuego()
-    
+        self.lienzo.focus_set() 
+
+        
     def moverPajaro(self,event):
         if hasattr(self, 'pajaro'): #Verifica si el pajaro ha sido creado
             self.pajaro.saltar(event)
     
     def actualizarJuego(self):
-         if hasattr(self, 'pajaro'):
-             self.pajaro.actualizar_posicion()
-             self.lienzo.after(30, self.actualizarJuego) #llama la funcion cada 30 milisegundos
+     if self.juego_activo and hasattr(self, 'pajaro'):
+        self.pajaro.actualizar_posicion()
+        self.lienzo.after(30, self.actualizarJuego)
+
+       
     
 
-        
+    def  hilo_colisiones(self):
+        hilo_colision=th.Thread(target=self.detectar_colisiones)
+        hilo_colision.daemon=True #Evita que cuando el jugador pierda el hilo se quede en segundo plano
+        hilo_colision.start()
+    
+    def detectar_colisiones(self):
+        while True:
+            if hasattr(self,"pajaro"): #ya existe pajaro?
+                pajaro_coordenadas = self.lienzo.bbox(self.pajaro.pajaro) #bbox: cuadro delemitador que devuelve una tupla de 4 numeros que son las coordenadas de los rectangulos
+                for tuberia in Tuberias.tuberias_funcionando:
+                    t1=self.lienzo.bbox(tuberia.tuberia1)
+                    t2=self.lienzo.bbox(tuberia.tuberia2)
+
+                    if self.colision(pajaro_coordenadas,t1) or self.colision(pajaro_coordenadas,t2):
+                        self.game_over()
+                        return
+                time.sleep(0.01)
+    def colision(self,r1, r2):  # rectangulos
+        r1_izq, r1_arriba, r1_dere, r1_abajo = r1
+        r2_izq, r2_arriba, r2_der, r2_abajo = r2
+        no_colision = (
+            r1_dere < r2_izq or   
+            r1_izq > r2_der or    
+            r1_abajo < r2_arriba or  
+            r1_arriba > r2_abajo     
+        )
+        return not no_colision
+    
+    
+
+    
+    def game_over(self):
+        self.juego_activo = False  # Detiene el bucle del juego
+        Tuberias.juego_activo=False
+        self.lienzo.create_text(400, 320, text="GAME OVER", fill="black", font=("Arial", 40))
+
+        if hasattr(self, "pajaro"):
+            self.pajaro.detener()  # Detiene al pájaro 
+    
+    def aumentar_puntaje(self):
+        self.puntaje +=1
+        self.lblPuntaje.config(text=f"Puntaje:{self.puntaje}")
+
+
+
+
+
 
 
     def paint(self):
@@ -38,6 +93,8 @@ class Juego():
 
         
     def __init__(self):
+        self.puntaje=0
+        self.juego_activo=True
         self.ventana = tk.Tk()
         self.ventana.title("JUEGO HAPPY BIRD")
         self.ventana.config(width=900, height=700, bg="#000000")
@@ -47,8 +104,12 @@ class Juego():
         self.lienzo.place(relx=0.5, rely=0.5, anchor="center", width=800, height=640)
         self.lienzo.focus_set() # Esto permite que el lienzo reciba eventos de teclado
 
+        self.imagenFondo = tk.PhotoImage(file=r"Juego\icons\fondo juego.png")
+        self.lienzo.create_image(0, 0, image=self.imagenFondo, anchor="nw", tags="fondo")
+
         self.iconoJugar = tk.PhotoImage(file=r"Juego\icons\icono_play.png")
         self.iconoAyuda = tk.PhotoImage(file=r"Juego\icons\icons8-help-50.png")
+        
         
         self.btnJugar = tk.Button(self.ventana, image=self.iconoJugar, bg="#dde38d")
         self.btnJugar.place(relx=0.5, rely=1, y=-53, anchor="center", width=105, height=44)
@@ -58,7 +119,7 @@ class Juego():
         self.btnAyuda.place(width=50, height=50, x=780, y=50)
         Tooltip(self.btnAyuda, "Presione para ver la ayuda")
  
-        self.lblPuntaje = tk.Label(self.lienzo, text="Puntaje", font= ("Arial", 14))
+        self.lblPuntaje = tk.Label(self.lienzo, text="Puntaje: 0",  font=("Comic Sans MS", 18, "bold"),bg="#94caca", fg="#175e0d",relief="raised", bd=4)
         self.lblPuntaje.place(relx=0.5, y=30, anchor="center")
 
         self.lienzo.create_rectangle(0, 590, 800, 640, fill="#dde38d", outline="#33b812", width=5)
@@ -66,7 +127,7 @@ class Juego():
         self.paint()
         self.btnJugar.bind("<Button-1>", self.comenzarJuego)
         self.lienzo.bind("<space>", self.moverPajaro)
-        
-
+        self.hilo_colisiones()
+       
 
         self.ventana.mainloop()
