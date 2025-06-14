@@ -15,6 +15,14 @@ class Juego():
     instacia_juego=None
 
     def reiniciar_juego(self,event):
+        self.boton_reiniciar.place_forget()
+        self.lienzo_game_over.destroy()  
+        self.btnJugar.place(relx=0.5, rely=1, y=-53, anchor="center", width=105, height=44)
+        self.lienzo.create_text(400, 550, text="Para saltar Presione la tecla de espacio", font=("Arial", 16), fill="black", tags="texto")
+
+        self.puntaje=0
+        self.lblPuntaje.config(text=f"Puntaje:{self.puntaje}")
+
         tuberias_hechas=self.tuberia.tuberias_funcionando
 
         for tuberia in tuberias_hechas:
@@ -24,26 +32,25 @@ class Juego():
             self.lienzo.delete("pajaro")
 
         self.juego_activo = False  # reiniciar estado del juego
-
-        self.paint()  # vuelve a crear el lienzo
-
-        
+        self.paint()
+        self.btnJugar.config(state="normal")# vuelve a crear el lienzo
+    
         
 
     def comenzarJuego(self,event):
         if self.juego_activo:#no deja que se cree otro hilo hasta que el anterior termine su ciclo
                     return
-        if event.keysym =="c":
-                        
-            self.juego_activo=True
-            self.hilo_colisiones() 
-            self.tuberia=Tuberias(self.lienzo,self) #self llama al self.juego de las tuberias
-            self.pajaro=Manejo_Pajaro(self.lienzo) 
-            
-            self.tuberia.iniciar_movimiento()#crear el hilo que mueve el objeto 
-            
-            self.actualizarJuego()
-            self.lienzo.focus_set() 
+        self.lienzo.delete("texto")               
+        self.juego_activo=True
+        self.btnJugar.config(state="disabled")
+        self.hilo_colisiones() 
+        self.tuberia=Tuberias(self.lienzo,self) #self llama al self.juego de las tuberias
+        self.pajaro=Manejo_Pajaro(self.lienzo) 
+        
+        self.tuberia.iniciar_movimiento()#crear el hilo que mueve el objeto 
+        
+        self.actualizarJuego()
+        self.lienzo.focus_set() 
             
         
     def moverPajaro(self,event):
@@ -95,37 +102,58 @@ class Juego():
         return not no_colision
     
     
-    def game_over(self):
+    def game_over(self):#BASE DE DATOS
+        #por aqui se puede ir guardando el puntaje que obtenga el usuario, 
+        # y con la base de datos comparar el puntaje anterior guardado con el que obtiene al volver a jugar para que en la lista se muestren los puntajes maximos  de los jugadores
         self.juego_activo = False  # Detiene el bucle del juego
-        self.btnJugar.config(state="normal")
-        self.lienzo.create_text(400, 320, text="GAME OVER", fill="black", font=("Arial", 40))
-
         if hasattr(self, "pajaro"):
-            self.pajaro.detener()  # Detiene al pájaro 
+            self.pajaro.detener()  # Detiene al pájaro
+        self.lienzo.itemconfig("cuerpo",fill="#fc753b")
+        if self.puntaje>self.best_score:
+            self.best_score=self.puntaje
+        
+        self.mostrar_ventana2()
+        
     
     def aumentar_puntaje(self):
         self.puntaje +=1
         self.lblPuntaje.config(text=f"Puntaje:{self.puntaje}")
 
 
-
     def paint(self):
-       
-        self.lienzo.create_oval(200, 270, 265, 330, fill=self.color_pajaro, tags="pajaro")           
+
+        self.lienzo.create_oval(200, 270, 265, 330, fill="#fcf83b", tags=("pajaro","cuerpo"))           
         self.lienzo.create_oval(245, 275, 270, 300, fill="#ffffff", tags="pajaro")              
         self.lienzo.create_oval(257, 285, 267, 295, fill="#000102", tags="pajaro")           
         self.lienzo.create_oval(255, 302, 275, 310, fill="#F38C47", tags="pajaro")             
 
-        self.lienzo.create_oval(194, 290, 228, 313, fill="#ffffff", tags="pajaro")       
+        self.lienzo.create_oval(194, 290, 228, 313, fill="#ffffff", tags="pajaro")  
+
+    def mostrar_ventana2(self):
+        self.btnJugar.place_forget()
+        from tkinter import font
+        self.lienzo_game_over=tk.Canvas(self.lienzo,bg="#e8be13")
+        fuente= font.Font(family="Comic Sans MS", size=24, weight="bold")
+        self.lienzo_game_over.place(relx=0.5,rely=0.5,anchor="center", width=400,height=400)
+        self.lienzo_game_over.create_image(200,90,image=self.gameover)
+        self.lienzo_game_over.create_rectangle(50,175,350,310,fill="#fffd82", outline="#fffd82")
+        label_score=tk.Label(self.lienzo_game_over, text=f"SCORE: {self.puntaje}", font=fuente,fg="black", bg="#fffd82")
+        label_score.place(x=60,y=185)
+        label_best_score=tk.Label(self.lienzo_game_over, text=f"BEST: {self.best_score}", font=fuente,fg="black", bg="#fffd82")
+        label_best_score.place(x=60, y=250)
+
+        self.boton_reiniciar.place(relx=0.5, y=505, anchor="center",width=100, height=60)
+        
+
 
         
     def __init__(self):
         self.puntaje=0
+        self.best_score=0
         self.juego_activo=False
-        self.color_pajaro="#fcf83b"
         self.ventana = tk.Tk()
         self.ventana.title("JUEGO FLAPPY BIRD")
-        self.ventana.config(width=900, height=700, bg="#000000")
+        self.ventana.config(width=900,height=700,bg="#000000")
         self.ventana.resizable(0,0)
 
         self.lienzo = tk.Canvas(self.ventana, bg="#94caca")
@@ -138,9 +166,11 @@ class Juego():
         self.iconoJugar = tk.PhotoImage(file=r"Juego\icons\icono_play.png")
         self.iconoAyuda = tk.PhotoImage(file=r"Juego\icons\icons8-help-50.png")
         self.verPuntajes = tk.PhotoImage(file=r"Juego\icons\icons8-mac-folder-50.png")
+        self.gameover=tk.PhotoImage(file=r"Juego\icons\gameover.png")
+        self.iconoplay=tk.PhotoImage(file=r"Juego\icons\iconoplaygame.png")
         
         
-        self.btnJugar = tk.Button(self.ventana, image=self.iconoJugar, bg="#dde38d",state="disabled")
+        self.btnJugar = tk.Button(self.ventana, image=self.iconoJugar, bg="#dde38d",state="normal")
         self.btnJugar.place(relx=0.5, rely=1, y=-53, anchor="center", width=105, height=44)
         Tooltip(self.btnJugar, "Presione para iniciar el juego")
 
@@ -155,16 +185,15 @@ class Juego():
         self.btnPuntajes.place(width=50 ,height=50, x=70, y=50)
         Tooltip(self.btnPuntajes, "Presione para ver los \n puntajes de los jugadores")
 
+        self.boton_reiniciar=tk.Button(self.ventana, image=self.iconoplay,bg="white",compound="center")
+        Tooltip(self.boton_reiniciar, "Presione para volver a jugar")
+
+        self.lienzo.create_text(400, 550, text="Para saltar Presione la tecla de espacio", font=("Arial", 16), fill="black", tags="texto")
         self.lienzo.create_rectangle(0, 590, 800, 640, fill="#dde38d", outline="#33b812", width=5)
         
-        self.paint()
-        
-
+        self.paint()        
         self.hilo_colisiones()
-        self.btnJugar.bind("<Button-1>", self.reiniciar_juego)
-        self.ventana.bind("<KeyRelease>", self.comenzarJuego)
         self.lienzo.bind("<space>", self.moverPajaro)
-
-
-
+        self.boton_reiniciar.bind("<Button-1>", self.reiniciar_juego)
+        self.btnJugar.bind("<Button-1>", self.comenzarJuego)
         self.ventana.mainloop()
