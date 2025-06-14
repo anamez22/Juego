@@ -22,8 +22,12 @@ class Juego():
         
         if hasattr(self, 'pajaro'): #Verifica si el pajaro ha sido creado
             self.lienzo.delete("pajaro")
-        self.paint()
-      
+
+        self.juego_activo = False  # reiniciar estado del juego
+
+        self.paint()  # vuelve a crear el lienzo
+
+        
         
 
     def comenzarJuego(self,event):
@@ -32,6 +36,7 @@ class Juego():
         if event.keysym =="c":
                         
             self.juego_activo=True
+            self.hilo_colisiones() 
             self.tuberia=Tuberias(self.lienzo,self) #self llama al self.juego de las tuberias
             self.pajaro=Manejo_Pajaro(self.lienzo) 
             
@@ -60,13 +65,22 @@ class Juego():
         while True:
             if hasattr(self,"pajaro"): #ya existe pajaro?
                 pajaro_coordenadas = self.lienzo.bbox("pajaro") #bbox: cuadro delemitador que devuelve una tupla de 4 numeros que son las coordenadas de los rectangulos
+                if pajaro_coordenadas is None:
+                    time.sleep(0.01)
+                    continue
+                
                 for tuberia in Tuberias.tuberias_funcionando:
                     t1=self.lienzo.bbox(tuberia.tuberia1)
                     t2=self.lienzo.bbox(tuberia.tuberia2)
 
-                    if self.colision(pajaro_coordenadas,t1) or self.colision(pajaro_coordenadas,t2):
+                    # Verifica que t1 y t2 no sean None
+                    if t1 and self.colision(pajaro_coordenadas, t1):
                         self.game_over()
                         return
+                    if t2 and self.colision(pajaro_coordenadas, t2):
+                        self.game_over()
+                        return
+                    
                 time.sleep(0.01)
 
     def colision(self,r1, r2):  # r=rectangulos
