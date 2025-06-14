@@ -14,7 +14,7 @@ class Juego():
 
     instacia_juego=None
 
-    def limpiar_juego(self,event):
+    def reiniciar_juego(self,event):
         tuberias_hechas=self.tuberia.tuberias_funcionando
 
         for tuberia in tuberias_hechas:
@@ -24,22 +24,19 @@ class Juego():
             self.lienzo.delete("pajaro")
         self.paint()
       
-
-    def reiniciar_juego(self):
-        pass
+        
 
     def comenzarJuego(self,event):
-        if event.keysym =="c":
-
-            if self.juego_activo:#no deja que se cree otro hilo hasta que el anterior termine su ciclo
+        if self.juego_activo:#no deja que se cree otro hilo hasta que el anterior termine su ciclo
                     return
+        if event.keysym =="c":
                         
             self.juego_activo=True
-            #self.btnJugar.config(state="disabled")
             self.tuberia=Tuberias(self.lienzo,self) #self llama al self.juego de las tuberias
+            self.pajaro=Manejo_Pajaro(self.lienzo) 
+            
             self.tuberia.iniciar_movimiento()#crear el hilo que mueve el objeto 
-        
-            self.pajaro = Manejo_Pajaro(self.lienzo)       
+            
             self.actualizarJuego()
             self.lienzo.focus_set() 
             
@@ -71,6 +68,7 @@ class Juego():
                         self.game_over()
                         return
                 time.sleep(0.01)
+
     def colision(self,r1, r2):  # r=rectangulos
         r1_izq, r1_arriba, r1_dere, r1_abajo = r1
         r2_izq, r2_arriba, r2_der, r2_abajo = r2
@@ -112,7 +110,7 @@ class Juego():
         self.juego_activo=False
         self.color_pajaro="#fcf83b"
         self.ventana = tk.Tk()
-        self.ventana.title("JUEGO HAPPY BIRD")
+        self.ventana.title("JUEGO FLAPPY BIRD")
         self.ventana.config(width=900, height=700, bg="#000000")
         self.ventana.resizable(0,0)
 
@@ -147,10 +145,12 @@ class Juego():
         
         self.paint()
         
-        self.btnJugar.bind("<Button-1>", self.limpiar_juego)
+
+        self.hilo_colisiones()
+        self.btnJugar.bind("<Button-1>", self.reiniciar_juego)
         self.ventana.bind("<KeyRelease>", self.comenzarJuego)
         self.lienzo.bind("<space>", self.moverPajaro)
-        self.hilo_colisiones()
-        self.pajaro="pajaro"
+
+
 
         self.ventana.mainloop()

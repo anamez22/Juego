@@ -32,8 +32,6 @@ class Manejo_Pajaro:
     def detener(self):
         self.movimiento_activo=False
 
-
-
     def saltar(self, event=None):
         self.velocidad =self.salto
 

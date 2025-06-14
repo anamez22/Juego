@@ -11,7 +11,7 @@ class Tuberias:
 
 
     def dibujar(self):
-        self.tuberia1=self.lienzo.create_rectangle(680+self.x, 0, 790+self.x, self.obstaculo, fill=self.color, tags="tuberia" )
+        self.tuberia1=self.lienzo.create_rectangle(680+self.x, 0, 790+self.x, self.obstaculo, fill=self.color, tags="tuberia")
         self.tuberia2=self.lienzo.create_rectangle(680+self.x, self.obstaculo+175, 790+self.x, 590, fill=self.color, tags="tuberia" )
        
 
