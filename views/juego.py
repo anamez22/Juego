@@ -6,7 +6,7 @@ import threading as th
 import time
 from tkinter import messagebox as mb
 
-
+from Controllers.sonidos import manejar_sonidos
 from Controllers.Tuberias import Tuberias
 from Controllers.pajaro import Manejo_Pajaro
 
@@ -34,6 +34,7 @@ class Juego():
         self.juego_activo = False  # reiniciar estado del juego
         self.paint()
         self.btnJugar.config(state="normal")# vuelve a crear el lienzo
+        self.bandera=True
     
         
 
@@ -56,6 +57,8 @@ class Juego():
     def moverPajaro(self,event):
         if hasattr(self, 'pajaro'): #Verifica si el pajaro ha sido creado
             self.pajaro.saltar(event)
+            if self.bandera:
+                manejar_sonidos(vuelo=True)
     
     def actualizarJuego(self):
      if self.juego_activo and hasattr(self, 'pajaro'):
@@ -82,9 +85,11 @@ class Juego():
 
                     # Verifica que t1 y t2 no sean None
                     if t1 and self.colision(pajaro_coordenadas, t1):
+                        manejar_sonidos(gameover=True)
                         self.game_over()
                         return
                     if t2 and self.colision(pajaro_coordenadas, t2):
+                        manejar_sonidos(gameover=True)
                         self.game_over()
                         return
                     
@@ -101,11 +106,12 @@ class Juego():
         )
         return not no_colision
     
-    
+
     def game_over(self):#BASE DE DATOS
         #por aqui se puede ir guardando el puntaje que obtenga el usuario, 
         # y con la base de datos comparar el puntaje anterior guardado con el que obtiene al volver a jugar para que en la lista se muestren los puntajes maximos  de los jugadores
         self.juego_activo = False  # Detiene el bucle del juego
+        self.bandera=False
         if hasattr(self, "pajaro"):
             self.pajaro.detener()  # Detiene al pájaro
         self.lienzo.itemconfig("cuerpo",fill="#fc753b")
@@ -196,4 +202,7 @@ class Juego():
         self.lienzo.bind("<space>", self.moverPajaro)
         self.boton_reiniciar.bind("<Button-1>", self.reiniciar_juego)
         self.btnJugar.bind("<Button-1>", self.comenzarJuego)
+
+        self.bandera=True
+    
         self.ventana.mainloop()

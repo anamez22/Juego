@@ -1,9 +1,12 @@
 import random
 import threading as th
 import time
+from .sonidos import manejar_sonidos
+ 
 
 class Tuberias:
     tuberias_funcionando=[]
+    
 
     def iniciar_movimiento(self, *args):
         hilo1 = th.Thread(target=self.actualizar_tuberias)
@@ -18,7 +21,7 @@ class Tuberias:
         self.decoracion1=self.lienzo.create_rectangle(670+self.x, self.obstaculo-50, 800+self.x, self.obstaculo, fill=self.color, tags="tuberia")
         self.decoracion2=self.lienzo.create_rectangle(670+self.x, self.obstaculo+175, 800+self.x, self.obstaculo+225, fill=self.color, tags="tuberia")
   
-   
+
     def mover_tuberias(self):
         self.x -= self.velocidad
         self.lienzo.move(self.tuberia1, -self.velocidad, 0)
@@ -27,9 +30,11 @@ class Tuberias:
         self.lienzo.move(self.decoracion2, -self.velocidad, 0)
         if not self.contar:
          coords = self.lienzo.bbox(self.tuberia1)
+         
          if coords is not None and coords[2] < 200:
           self.contar = True
           try:
+            manejar_sonidos(punto=True)
             self.juego.aumentar_puntaje()  
           except Exception as e:
             print("Error al aumentar puntaje:", e)
@@ -56,6 +61,7 @@ class Tuberias:
         self.obstaculo=random.randint(70,330) 
         self.velocidad = 2.5
         self.color = "#33b812"
+        
 
         self.dibujar()
         Tuberias.tuberias_funcionando.append(self)#guarda la referencia del objeto que se crea

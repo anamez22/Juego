@@ -1,5 +1,4 @@
 #Manejo del Pajaro y Puntajes
-
 class Manejo_Pajaro:
 
     def __init__(self,canvas):
@@ -7,6 +6,7 @@ class Manejo_Pajaro:
         self.velocidad=0
         self.gravedad=2
         self.salto=-15
+        self.sonido_reproduciendose=False
      
 
     def actualizar_posicion(self):
@@ -34,6 +34,7 @@ class Manejo_Pajaro:
 
     def saltar(self, event=None):
         self.velocidad =self.salto
+        #th.Thread(target=self.sonar_vuelo, daemon=True).start()
 
     def mover_pajaro(self, velocidad):
         self.lienzo.move("pajaro",0,velocidad)
